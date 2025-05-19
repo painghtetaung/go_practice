@@ -28,6 +28,7 @@ func dbCall(i int) {
 	time.Sleep(time.Duration(delay) * time.Millisecond)
 	fmt.Println("The result from the database is: ", dbData[i])
 	m.Lock()
+
 	results = append(results, dbData[i])
 	m.Unlock()
 	wg.Done()
@@ -37,7 +38,7 @@ func main() {
 	fmt.Println("Hello, World!")
 
 	t0 := time.Now()
-	for i := 0; i < 100; i++ {
+	for i := 0; i < len(dbData); i++ {
 		wg.Add(1)
 		go dbCall(i)
 	}
