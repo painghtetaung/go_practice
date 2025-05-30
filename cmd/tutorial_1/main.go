@@ -4,27 +4,69 @@ import (
 	"fmt"
 )
 
-var MAX_CHICKEN_PRICE float32 = 5
-
-type data struct {
-	name string
-	age int
+type user struct {
+	name  string
+	email string
 }
 
-func (d data) displayName() {
-	fmt.Printf("\nName: %s, Age: %d", d.name, d.age)
+type admin struct {
+	user  // embedded type
+	level string
 }
 
-func (d *data) setAge(age int) {
-	d.age = age
+type notifier interface {
+	notify()
+}
+
+func (u *user) notify() {
+	fmt.Printf("Sending user email to %s<%s>\n", u.name, u.email)
+}
+
+func sendNotification(n notifier) {
+	n.notify()
 }
 
 func main() {
-	var d = data{name: "John", age: 20}
-	f1 := d.displayName
-	d.name = "Jane"
-	f2 := d.setAge
-	f2(21)
-	fmt.Println("After setAge", d)
-	f1()
+	u := user{name: "John", email: "john@example.com"}
+	a := admin{
+		user:  u,
+		level: "super",
+	}
+	sendNotification(&a)
+	a.notify()
+	// fmt.Println(&21, "21")
 }
+
+// package main
+
+// import "fmt"
+
+// // Define interface
+// type Animal interface {
+//     Speak() string
+// }
+
+// // Type 1
+// type Dog struct{}
+// func (d Dog) Speak() string {
+//     return "Woof!"
+// }
+
+// // Type 2
+// type Cat struct{}
+// func (c Cat) Speak() string {
+//     return "Meow!"
+// }
+
+// // Function that uses the interface
+// func makeItSpeak(a Animal) {
+//     fmt.Println(a.Speak())
+// }
+
+// func main() {
+//     var d Dog
+//     var c Cat
+
+//     makeItSpeak(d) // Woof!
+//     makeItSpeak(c) // Meow!
+// }
